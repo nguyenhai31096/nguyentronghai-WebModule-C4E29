@@ -1,7 +1,7 @@
 from flask import Flask, render_template,request
 app = Flask(__name__)
 
-bike_list = []
+
 @app.route('/rentbike',methods=["GET","POST"])
 def rent_bike():
     if request.method == 'GET':        
@@ -14,7 +14,6 @@ def rent_bike():
             "image" : info['image'],
             "year" : info['year'],
         }
-        bike_list.append(info_input)
         print(info_input)
         return "Done!"
 
