@@ -9,10 +9,10 @@ def rent_bike():
     if request.method == 'POST':
         info = request.form
         info_input = {
-            "BikeModel" : info['model'],
-            "Dailyfee" : info['dailyfee'],
-            "ImageLink" : info['image'],
-            "Year" : info['year'],
+            "model" : info['model'],
+            "dailyfee" : info['dailyfee'],
+            "image" : info['image'],
+            "year" : info['year'],
         }
         bike_list.append(info_input)
         print(info_input)
