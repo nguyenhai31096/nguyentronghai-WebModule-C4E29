@@ -1,44 +1,8 @@
 from flask import Flask, render_template, request, redirect
+from food_db import Foods
+from bson.objectid import ObjectId
 app = Flask(__name__)
 
-foods = [
-    {
-        "title": "thịt chó",
-        "description": "rất ngon",
-        "link" : "http://media.kinhtedothi.vn//2018/02/12/thit_cho_trung_quoc_benh_dai.jpg",
-        "type": "eat",
-    },
-    {
-        "title": "bún chả",
-        "description": "rất ngon",
-        "link" : "https://www.dvpmarket.com/wp-content/uploads/2018/03/Bun-cha-Ha-Noi-thom-ngon-hap-dan.jpg",
-        "type": "eat",
-    },
-    {
-        "title": "tiết canh",
-        "description": "rất kinh",
-        "link" : "https://vcdn-suckhoe.vnecdn.net/2019/01/23/photo1527847101966-15278471019-7986-2036-1548214608.png",
-        "type": "eat",
-    },
-    {
-        "title": "detox",
-        "description": "giảm cân",
-        "link": "https://detoxgreen.vn/wp-content/uploads/2018/03/maxresdefault-1.jpg",
-        "type": "drink",
-    },
-    {
-        "title": "coffee",
-        "description": "đắng",
-        "link":"https://cdn.tuoitre.vn/thumb_w/640/2018/3/29/photo-1-1522310569261591693730.jpg",
-        "type": "drink",
-    },
-    {
-        "title": "volka",
-        "description": "phê",
-        "link": "https://quanngon138.com/upload/product/volka-smirnoff-nga1522165193.png",
-        "type": "drink",
-    }
-    ]
 
 
 @app.route('/') #>>>>>link in here
@@ -61,11 +25,12 @@ def addnum(num1, num2):
 
 @app.route('/food')
 def food():
+    foods = Foods.find() #get data
     return render_template("food.html", foods= foods)
 
-@app.route('/food/<int:index>')
-def detail(index):
-    detail_food = foods[index]
+@app.route('/food/<id>')
+def detail(id):
+    detail_food = Foods.find_one({'_id': ObjectId(id)})
     return render_template('food_detail.html', food_detail = detail_food)
 
 @app.route('/food/add_food', methods=['GET','POST'])
@@ -80,9 +45,29 @@ def add_food():
             "link" : form['link'],
             "type": form['type'],
         }
-        foods.append(new_food)
+        Foods.insert_one(new_food)
+        return redirect('/food')
+@app.route('/food/edit/<id>', methods= ['GET','POST'])
+def edit_food(id):
+    food = Foods.find_one({"_id": ObjectId(id)})
+    if request.method == 'GET':
+        return render_template('edit_food.html', food=food)
+    elif request.method == "POST":
+        form = request.form 
+        new_value = { '$set': {
+            "title": form["title"],
+            "description": form["description"],
+            "link": form["link"],
+            "type": form["type"]
+        }}
+        Foods.update_one(food, new_value)
         return redirect('/food')
 
+@app.route('/food/delete/<id>')
+def delete(id):
+    food = Foods.find_one({"_id": ObjectId(id)})
+    Foods.delete_one(food)
+    return redirect('/food')
 data = {
     "username" : "c4e",
     "pwd" : "c4e",
@@ -114,4 +99,4 @@ def register_form():
         return "Register page!"
 if __name__ == '__main__':
   app.run( debug=True)
- 
+

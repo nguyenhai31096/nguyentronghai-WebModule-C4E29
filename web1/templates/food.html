@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Food Menu</title>
 </head>
 <body>
     
@@ -12,8 +12,10 @@
         <h3>Món ăn số: {{ loop.index }} </h3> <br>
         <b>Món: </b> {{item.title}}<br>
         <img src="{{item.link}}" > <br>
-        <a href="/food/{{loop.index0}}">chi tiết món ăn</a>
-        
+        <a href="/food/{{item._id}}">chi tiết món ăn</a>
+        <a href="/food/edit/{{item._id}}">sửa thông tin món ăn</a>
+        <a href="/food/delete/{{item._id}}">xóa món ăn</a>
+
         <hr>
     {% endfor %}
 
