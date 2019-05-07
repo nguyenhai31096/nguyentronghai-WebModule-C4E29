@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect
-from food_db import Foods
+from flask import *
+from food_db import Foods, Users
 from bson.objectid import ObjectId
 app = Flask(__name__)
 
-
+app.config['SECRET_KEY'] = 'haideptraivaicachuong@@123'
 
 @app.route('/') #>>>>>link in here
 def index():
@@ -25,8 +25,14 @@ def addnum(num1, num2):
 
 @app.route('/food')
 def food():
-    foods = Foods.find() #get data
-    return render_template("food.html", foods= foods)
+    if 'logged' in session:
+        if session['logged']:
+            foods = Foods.find() #get data
+            return render_template("food.html", foods= foods)
+        else:
+            return redirect('/login')
+    else:
+        return redirect('/login')
 
 @app.route('/food/<id>')
 def detail(id):
@@ -68,35 +74,65 @@ def delete(id):
     food = Foods.find_one({"_id": ObjectId(id)})
     Foods.delete_one(food)
     return redirect('/food')
-data = {
-    "username" : "c4e",
-    "pwd" : "c4e",
-}
+# data = {
+#     "username" : "c4e",
+#     "pwd" : "c4e",
+# }
     
 @app.route('/login', methods=['GET','POST'])
 
 def login():
-    if request.method == 'GET':
-        return render_template('login.html')
-    elif request.method == 'POST':
-        form = request.form
-        login_form = {
-            "username": form['username'],
-            "pwd": form['pwd'],
-        }
-        if data["username"] == login_form["username"]:
-            if data["pwd"] == login_form["pwd"]:
-                return 'WELCOME'
-            else:
-                return 'forbiden'
+    if 'logged' in session:
+        if session['logged']:
+            return redirect('/food')
         else:
-            return 'wrong username!'
-            
+            if request.method == 'GET':
+                print(session)
+                return render_template('login.html')
+            elif request.method == 'POST':
+                form = request.form
+                login_form = {
+                    "username": form['username'],
+                    "pwd": form['pwd'],
+                }
+                user = Users.find_one({'username': login_form["username"]} )
+                if user is None :
+                    session['logged'] = False
+                    return redirect('login')
+                else :
+                    if login_form["pwd"] == user['password']:
+                        session['logged'] = True
+                        return redirect('/food')
+                    else:
+                        return redirect('/login')
+    else:
+        session['logged'] = False
+        return render_template('login.html')
+
+
+@app.route('/logout')
+def logged():
+    if 'logged' in session:
+        session['logged'] = False
+    return redirect('/login')
+
 @app.route('/register', methods=['GET','POST'])
 def register_form():
-    if request.method == 'POST':
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
         form = request.form
+        register_username = form['register_username']
+        register_password = form['register_password']
+        new_user = {
+            'username': register_username,
+            'password': register_password,
+        }
+        Users.insert_one(new_user)
         return "Register page!"
+
+
+
 if __name__ == '__main__':
   app.run( debug=True)
 

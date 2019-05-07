@@ -21,11 +21,11 @@ wom = coll_custom.find({'ref': 'wom'})
 wom_count = wom.count()
 ads = coll_custom.find({'ref': 'ads'})
 ads_count = ads.count()
-#count
+
 print(wom_count)
 print(events_count)
 print(ads_count)
-#chart
+
 labels = 'Events', 'Word of mouth', 'Ads'
 sizes = [events_count,wom_count,ads_count]
 colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
@@ -34,8 +34,6 @@ pyplot.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, 
 
 pyplot.axis('equal')
 pyplot.show()
-
-
 
 
 

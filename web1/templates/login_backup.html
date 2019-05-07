@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
-    <link rel="stylesheet" href="../static/css/style.css"> <!--link file css-->
 </head>
 <body>
     <form action="/login" method="POST">
@@ -15,12 +14,13 @@
         <input type="submit" value="Login"> 
         <input type="reset" value='Reset'>
     </form>
-<div>
-    <h1 id="first_h1">TEST THỬ CSS</h1>
-    <h1 id="second_h1">TEST LẦN 2</h1>
-    <h2 class="text-blue">ĐÂY LÀ THẺ h2</h2>
-    <h5 class="text-blue">ĐÂY LÀ THẺ h5</h5>
-    <h6 class="text-blue">ĐÂY LÀ THẺ h6</h6>
-</div>
+    <br><br><br><br>
+    <form action="/register" method="POST">
+        <input type="text" placeholder="Username" name=register_username><br><br>
+        <input type="password" placeholder="Password" name=register_pwd><br><br>
+        <!-- <button>Login</button>  bên dưới là cách khác để tạo nút-->
+        <input type="submit" value="Register"> 
+        <input type="reset" value='Reset'>
+        </form>
 </body>
 </html>
